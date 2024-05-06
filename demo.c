@@ -9,6 +9,27 @@
 #include "cimgui.h"
 #include "sokol_imgui.h"
 
+#define SOKOL_IMPL
+#include "sokol_audio.h"
+
+static void stream_cb(float* buffer, int num_frames, int num_channels) {
+    assert(1 == num_channels);
+    static uint32_t count = 0;
+    for (int i = 0; i < num_frames; i++) {
+        buffer[i] = (count++ & (1<<3)) ? 0.5f : -0.5f;
+    }
+}
+
+
+static void play_sound(void) {
+ saudio_setup(&(saudio_desc){
+        .stream_cb = stream_cb,
+        .logger.func = slog_func,
+    });
+}
+
+
+
 static struct {
     sg_pass_action pass_action;
 } state;
@@ -38,7 +59,10 @@ static void frame(void) {
     igSetNextWindowPos((ImVec2){10,10}, ImGuiCond_Once, (ImVec2){0,0});
     igSetNextWindowSize((ImVec2){400, 100}, ImGuiCond_Once);
     igBegin("Hello Dear ImGui!", 0, ImGuiWindowFlags_None);
-    igColorEdit3("Background", &state.pass_action.colors[0].clear_value.r, ImGuiColorEditFlags_None);
+    igText("Hello Jonathan, it's me. The computer");
+    if (igButton("Play Sound", (ImVec2){100, 50})) {
+        play_sound();
+    }
     igEnd();
     /*=== UI CODE ENDS HERE ===*/
 
@@ -51,6 +75,8 @@ static void frame(void) {
 static void cleanup(void) {
     simgui_shutdown();
     sg_shutdown();
+    saudio_shutdown();
+
 }
 
 static void event(const sapp_event* ev) {

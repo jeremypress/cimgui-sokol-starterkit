@@ -1,0 +1,4 @@
+I was able to get this building via the readme instructions
+
+
+then I included the audio header, (and defined it) and gpt4 helped me write an extremely unpleasant audio sound on click (don't press the button)
