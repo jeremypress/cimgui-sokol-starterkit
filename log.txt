@@ -1,4 +1,7 @@
 I was able to get this building via the readme instructions
 
+emcmake cmake -DCMAKE_BUILD_TYPE=MinSizeRel ..
+cmake --build .
+emrun demo.html
 
 then I included the audio header, (and defined it) and gpt4 helped me write an extremely unpleasant audio sound on click (don't press the button)
